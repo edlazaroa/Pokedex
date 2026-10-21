@@ -120,6 +120,53 @@ export function renderitzarLlistaNoms(llista) {
  *  - El botó del crit només s'ha de pintar si pokemon.cryUrl no és null.
  *  - Un cop pintat l'HTML, afegeix el listener de clic al botó i crida reproduirCrit().
  */
+export function renderitzarDetallCard(pokemon) {
+    const pokemonDetall = document.getElementById("pokemon-detail");
+    pokemonDetall.innerHTML = "";
+    const elementDiv = document.createElement("div");
+    elementDiv.className = "detail-card";
+    const elementH3 = document.createElement("h3");
+    elementH3.textContent = `#${String(pokemon.id).padStart(3, "0")} ${pokemon.name}`;
+    elementDiv.appendChild(elementH3);
+    if (pokemon.imageUrl) {
+        const imatge = document.createElement("img");
+        imatge.src = pokemon.imageUrl;
+        imatge.alt = pokemon.name;
+        elementDiv.appendChild(imatge);
+    }
+    if (pokemon.cryurl) {
+        const botoCrit = document.createElement("button");
+        botoCrit.id = "btn-play-cry";
+        botoCrit.className = "btn-cry";
+        botoCrit.textContent = "🔊 Escolta el crit";
+        botoCrit.addEventListener("click", () => {
+            reproduirCrit(pokemon.cryurl);
+        });
+        elementDiv.appendChild(botoCrit);
+    }
+    const parragrafPes = document.createElement("p");
+    parragrafPes.innerHTML = `<strong>Pes:</strong> ${pokemon.weightKg} kg`;
+    elementDiv.appendChild(parragrafPes);
+    const parragrafTipus = document.createElement("p");
+    const nomsTipus = pokemon.types.map((tipus) => `${tipus.icon} ${tipus.name}`).join(", ");
+    parragrafTipus.innerHTML = `<strong>Tipus:</strong> ${nomsTipus}`;
+    elementDiv.appendChild(parragrafTipus);
+    const estadistiques = document.createElement("div");
+    estadistiques.className = "stats-grid";
+    pokemon.stats.forEach(([nom, valor]) => {
+        const caixa = document.createElement("div");
+        caixa.className = "stat-box";
+        const nomEstadistica = document.createElement("span");
+        nomEstadistica.textContent = nom.toUpperCase();
+        const valorEstadistica = document.createElement("strong");
+        valorEstadistica.textContent = String(valor);
+        caixa.appendChild(nomEstadistica);
+        caixa.appendChild(valorEstadistica);
+        estadistiques.appendChild(caixa);
+    });
+    elementDiv.appendChild(estadistiques);
+    pokemonDetall.appendChild(elementDiv);
+}
 // TODO: Implementa la lògica de l'exercici 3 seguint els requisits
 /**
  * EXERCICI 4

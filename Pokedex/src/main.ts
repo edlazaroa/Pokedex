@@ -6,6 +6,7 @@ import * as Models from "./models.js";
 import * as Utils from "./utils.js";
 
 const mapaPokemon = new Map<number, Models.BasePokemon>();
+const cachePokemon = new Map<number, Models.DetailedPokemon>();
 
 const botoCarregarPokemon = document.getElementById("btn-show-all") as HTMLButtonElement;
 
@@ -43,6 +44,30 @@ async function carregarLlistaPokemon(): Promise<void> {
 // ==========================================================
 // TODO: Implementa la lògica de l'exercici 2 seguint els requisits
 
+const cercador = document.getElementById("search-input") as HTMLInputElement;
+
+cercador.addEventListener("input", () => {
+    const text = cercador.value.trim().toLowerCase();
+
+    if (text === "") {
+        Utils.renderitzarLlistaNoms(Array.from(mapaPokemon.values()));
+
+    } else if (!isNaN(Number(text))) {
+        const id = Number(text);
+        const pokemon = mapaPokemon.get(id);
+
+        if (pokemon) {
+            Utils.renderitzarLlistaNoms([pokemon]);
+        } else {
+            Utils.renderitzarLlistaNoms([]);
+        }
+    } else {
+        const resultado = Array.from(mapaPokemon.values()).filter(
+            (pokemon) => pokemon.name.toLowerCase().includes(text)
+        );
+        Utils.renderitzarLlistaNoms(resultado);
+    }
+});
 
 
 // ==========================================================
@@ -50,6 +75,59 @@ async function carregarLlistaPokemon(): Promise<void> {
 // ==========================================================
 // TODO: Implementa la lògica de l'exercici 3 seguint els requisits
 
+const listaPokemon = document.getElementById("pokemon-list") as HTMLUListElement;
+
+listaPokemon.addEventListener("click", (event: MouseEvent) => {
+    const elemento = event.target as HTMLElement;
+    const item = elemento.closest("li");
+
+    if (!item) {
+        return;
+    }
+
+    const id = Number(item.dataset.id);
+    const pokemon = mapaPokemon.get(id);
+
+    if (!pokemon) {
+        return;
+    }
+
+    Utils.marcarItemActiu(item);
+
+    carregarDetallPokemon(pokemon.id, pokemon.url);
+});
+
+async function carregarDetallPokemon(id: number, url: string): Promise<void> {
+    try {
+        const pokemonGuardat = cachePokemon.get(id);
+
+        if (pokemonGuardat) {
+            Utils.renderitzarDetallCard(pokemonGuardat);
+            Utils.amagarEstat();
+            return;
+        }
+
+        Utils.mostrarEstat("Carregant detall del Pokémon...", "loading");
+
+        const resposta = await fetch(url);
+
+        if (!resposta.ok) {
+            throw new Error("Error en carregar el detall del Pokémon.");
+        }
+
+        const dades = await resposta.json() as Models.IPokeApiDetail;
+
+        const pokemon = new Models.DetailedPokemon(dades, url);
+
+        cachePokemon.set(id, pokemon);
+
+        Utils.renderitzarDetallCard(pokemon);
+        Utils.amagarEstat();
+
+    } catch (error: unknown) {
+        Utils.mostrarEstat("Hi ha hagut un error en carregar el Pokémon.", "error");
+    }
+}
 
 
 // ==========================================================
