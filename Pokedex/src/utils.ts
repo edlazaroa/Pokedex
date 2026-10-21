@@ -97,7 +97,7 @@ export function reproduirCrit(soundUrl: string): void {
 // TODO: Implementa la lògica de l'exercici 1 seguint els requisits
 
 export function renderitzarLlistaNoms(llista: Models.BasePokemon[]): void {
-    const llistaPokemon = document.getElementById("pokemon-list") as HTMLUListElement;
+    const llistaPokemon = document.getElementById("pokemon-list");
 
     if (!llistaPokemon) {
         console.error("No s'ha trobat la llista de Pokémon");
