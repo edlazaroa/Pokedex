@@ -125,7 +125,37 @@ export const POKEMON_TYPES: Record<PokemonTypeName, PokemonType> = {
  *   _id: número que conté l'identificador únic del pokemon
  *   _name: cadena de text que conté el nom del pokemon
  *   _url: cadena de text que conté la url per obtenir el detall del pokemon
- *
+ */
+    export class BasePokemon {
+        private _id:number;
+        private _name:string;
+        private _url:string;
+
+    constructor(item: IPokeApiListItem) {
+        this._name = item.name;
+        this._url = item.url;
+        const urlSeparada = item.url.split("/");
+        const partes = urlSeparada.filter(Boolean);
+        this._id = Number(partes.pop());
+    }
+    get id(): number {
+        return this._id;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get url(): string {
+        return this._url;
+    }
+
+    get formattedId(): string {
+        return "#" + String(this._id).padStart(3, "0");
+    }
+}
+
+/*
  * Constructor(item: IPokeApiListItem):
  *   - Desa name i url.
  *   - L'id NO ve a les dades: has d'extreure'l de la url.
