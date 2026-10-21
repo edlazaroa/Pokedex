@@ -135,8 +135,8 @@ export const POKEMON_TYPES: Record<PokemonTypeName, PokemonType> = {
         this._name = item.name;
         this._url = item.url;
         const urlSeparada = item.url.split("/");
-        const partes = urlSeparada.filter(Boolean);
-        this._id = Number(partes.pop());
+        const partesBuenas = urlSeparada.filter(Boolean);
+        this._id = Number(partesBuenas.pop());
     }
     get id(): number {
         return this._id;
@@ -184,7 +184,46 @@ export const POKEMON_TYPES: Record<PokemonTypeName, PokemonType> = {
  *   _types: array dels tipus als que pertany el pokemon (usar classe PokemonType)
  *   _stats: array amb informació sobre diferents atrributs (usar tupla type Stat)
  *   _cryUrl: cadena de text amb la url amb l'àudio del seu crit (pot ser null)
- *
+ */
+    export class DetailedPokemon extends BasePokemon {
+        private _weightKg:Number;
+        private _imageUrl:string | null;
+        private _types:PokemonType[];
+        private _stats:[name: string, value: number][];
+        private _cryUrl:string | undefined;
+
+        constructor(data: IPokeApiDetail, url:string) {
+            super({name: data.name, url: url});
+            this._weightKg = data.weight;
+            this._imageUrl = data.sprites.front_default;
+            this._cryUrl = data.cries?.latest;
+            this._types = data.types.map((t) => POKEMON_TYPES[t.type.name as PokemonTypeName]).filter((type): type is PokemonType => type !== undefined);
+            this._stats = data.stats.map((s): Stat => [s.stat.name, s.base_stat]);
+        }
+
+        get weightKg():Number {
+            return this._weightKg;
+        }
+
+        get imageUrl(): string|null {
+            return this._imageUrl;
+        }
+
+        get cryurl(): string|undefined {
+            return this._cryUrl;
+        }
+
+        get types(): PokemonType[] {
+            return this._types;
+        }
+
+        get stats(): Stat[]{
+            return this._stats;
+        }
+
+}
+
+/*
  * Constructor(data: IPokeApiDetail, url: string):
  *   - Crida obligatòria a super() amb un objecte { data.name, data.url } (IPokeApiListItem).
  *   - weightKg: obtenir de data.weight (l'API dóna el pes en hectograms -> divideix per 10).
