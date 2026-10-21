@@ -97,7 +97,7 @@ export function reproduirCrit(soundUrl: string): void {
 // TODO: Implementa la lògica de l'exercici 1 seguint els requisits
 
 export function renderitzarLlistaNoms(llista: Models.BasePokemon[]): void {
-    const llistaPokemon = document.getElementById("pokemon-list");
+    const llistaPokemon = document.getElementById("pokemon-list") as HTMLUListElement;
 
     if (!llistaPokemon) {
         console.error("No s'ha trobat la llista de Pokémon");
@@ -143,6 +143,18 @@ export function renderitzarLlistaNoms(llista: Models.BasePokemon[]): void {
  *  - Un cop pintat l'HTML, afegeix el listener de clic al botó i crida reproduirCrit().
  */
 
+    function renderitzarDetallCard(pokemon: Models.DetailedPokemon) {
+        const pokemonDetall = document.getElementById("pokemon-detail") as HTMLDivElement;
+
+        pokemonDetall.innerHTML = "";
+
+        const elementDiv = document.createElement("div");
+        elementDiv.className = "detail-card";
+        const elementH3 = document.createElement("h3");
+
+    }
+
+    function reproduirCrit();
 // TODO: Implementa la lògica de l'exercici 3 seguint els requisits
 
 
