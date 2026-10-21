@@ -2,8 +2,8 @@
 // EXERCICI 1: Llistar els 151 Pokémon
 // ==========================================================
 // TODO: Implementa la lògica de l'exercici 1 seguint els requisits
-import * as Models from "./models";
-import * as Utils from "./utils";
+import * as Models from "./models.js";
+import * as Utils from "./utils.js";
 
 const mapaPokemon = new Map<number, Models.BasePokemon>();
 
@@ -29,9 +29,7 @@ async function carregarLlistaPokemon(): Promise<void> {
             mapaPokemon.set(pokemon.id, pokemon);
         });
 
-        Utils.renderitzarLlistaNoms(
-            Array.from(mapaPokemon.values())
-        );
+        Utils.renderitzarLlistaNoms(Array.from(mapaPokemon.values()));
 
         Utils.amagarEstat();
 
