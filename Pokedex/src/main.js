@@ -95,10 +95,7 @@ async function carregarDetallPokemon(id, url) {
         Utils.mostrarEstat("Hi ha hagut un error en carregar el Pokémon.", "error");
     }
 }
-// ==========================================================
-// EXERCICI 4: Botons de filtre per tipus
-// ==========================================================
-// TODO: Implementa la lògica de l'exercici 4 seguint els requisits
+Utils.generarBotonsTipus();
 // ==========================================================
 // EXERCICI 5: Filtrar la llista per tipus
 // ==========================================================

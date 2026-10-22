@@ -1,4 +1,5 @@
 import * as Models from "./models.js";
+import {PokemonType, PokemonTypeName} from "./models.js";
 
 // ==========================================================
 // PART A: FUNCIONS JA IMPLEMENTADES (no cal modificar-les)
@@ -207,7 +208,6 @@ export function renderitzarDetallCard(pokemon: Models.DetailedPokemon): void {
     pokemonDetall.appendChild(elementDiv);
 }
 
-    function reproduirCrit();
 // TODO: Implementa la lògica de l'exercici 3 seguint els requisits
 
 
@@ -225,7 +225,23 @@ export function renderitzarDetallCard(pokemon: Models.DetailedPokemon): void {
  *       btn.textContent = el label del tipus
  *  - Recorda afegir el botó correctament al contenidor
  */
+    export function generarBotonsTipus(): void {
+        let contenidor = document.getElementById("type-filter-container") as HTMLDivElement;
 
+        contenidor.innerHTML = "";
+
+        let tipusPokemon = Object.values(Models.POKEMON_TYPES);
+
+        tipusPokemon.forEach((tipus) => {
+            let boto = document.createElement("button");
+            boto.className = "btn-type";
+            boto.dataset.type = tipus.id;
+            boto.style.backgroundColor = tipus.color;
+            boto.textContent = tipus.label;
+
+            contenidor.appendChild(boto);
+        })
+}
 // TODO: Implementa la lògica de l'exercici 4 seguint els requisits
 
 
