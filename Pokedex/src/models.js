@@ -118,7 +118,7 @@ export class DetailedPokemon extends BasePokemon {
     _cryUrl;
     constructor(data, url) {
         super({ name: data.name, url: url });
-        this._weightKg = data.weight;
+        this._weightKg = data.weight / 10;
         this._imageUrl = data.sprites.front_default;
         this._cryUrl = data.cries?.latest;
         this._types = data.types.map((t) => POKEMON_TYPES[t.type.name]).filter((type) => type !== undefined);

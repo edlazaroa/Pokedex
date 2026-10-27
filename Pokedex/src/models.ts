@@ -194,7 +194,7 @@ export const POKEMON_TYPES: Record<PokemonTypeName, PokemonType> = {
 
         constructor(data: IPokeApiDetail, url:string) {
             super({name: data.name, url: url});
-            this._weightKg = data.weight;
+            this._weightKg = data.weight / 10;
             this._imageUrl = data.sprites.front_default;
             this._cryUrl = data.cries?.latest;
             this._types = data.types.map((t) => POKEMON_TYPES[t.type.name as PokemonTypeName]).filter((type): type is PokemonType => type !== undefined);
