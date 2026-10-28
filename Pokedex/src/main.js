@@ -6,6 +6,7 @@ import * as Models from "./models.js";
 import * as Utils from "./utils.js";
 const mapaPokemon = new Map();
 const cachePokemon = new Map();
+let pokemonsVisibles = [];
 const botoCarregarPokemon = document.getElementById("btn-show-all");
 botoCarregarPokemon.addEventListener("click", carregarLlistaPokemon);
 async function carregarLlistaPokemon() {
@@ -101,51 +102,53 @@ Utils.generarBotonsTipus();
 // ==========================================================
 // TODO: Implementa la lògica de l'exercici 5 seguint els requisits
 const contenidorFiltres = document.getElementById("type-filter-container");
-if (contenidorFiltres) {
-    contenidorFiltres.addEventListener("click", (event) => {
-        const boto = event.target.closest("button");
-        if (!boto || !contenidorFiltres.contains(boto)) {
-            return;
-        }
-        const tipus = boto.dataset.type;
-        if (!tipus) {
-            return;
-        }
-        // Marquem només el botó seleccionat com a actiu
+contenidorFiltres.addEventListener("click", (event) => {
+    const boto = event.target.closest("button");
+    if (!boto || !contenidorFiltres.contains(boto)) {
+        return;
+    }
+    const tipus = boto.dataset.type;
+    if (!tipus) {
+        return;
+    }
+    if (boto.classList.contains("active")) {
+        boto.classList.remove("active");
+        pokemonsVisibles = Array.from(mapaPokemon.values());
+        Utils.renderitzarLlistaNoms(pokemonsVisibles);
+        Utils.netejarCercador();
+        Utils.netejarDetallCard();
+        Utils.amagarEstat();
+    }
+    else {
         contenidorFiltres.querySelectorAll("button").forEach((element) => {
             element.classList.remove("active");
         });
         boto.classList.add("active");
         carregarPokemonPerTipus(tipus);
-    });
-}
+    }
+});
 async function carregarPokemonPerTipus(tipus) {
     Utils.mostrarEstat("Carregant Pokémon...", "loading");
     try {
-        const resposta = await fetch(`https://pokeapi.co/api/v2/type/${tipus}`);
+        const resposta = await fetch("https://pokeapi.co/api/v2/type/" + tipus);
         if (!resposta.ok) {
-            throw new Error("Error en carregar els Pokémon del tipus.");
+            throw new Error("Error en carregar els Pokémon del tipus " + tipus);
         }
         const dades = await resposta.json();
-        mapaPokemon.clear();
+        pokemonsVisibles = [];
         dades.pokemon.forEach((element) => {
             const pokemon = new Models.BasePokemon(element.pokemon);
-            // Només Pokémon de la primera generació
             if (pokemon.id <= 151) {
-                mapaPokemon.set(pokemon.id, pokemon);
+                pokemonsVisibles.push(pokemon);
             }
         });
-        Utils.renderitzarLlistaNoms(Array.from(mapaPokemon.values()));
+        Utils.renderitzarLlistaNoms(pokemonsVisibles);
         Utils.netejarCercador();
         Utils.netejarDetallCard();
         Utils.amagarEstat();
     }
     catch (error) {
-        console.error("Error carregant Pokémon per tipus:", error);
-        const missatge = error instanceof Error
-            ? error.message
-            : "Error desconegut en carregar els Pokémon.";
-        Utils.mostrarEstat(missatge, "error");
+        Utils.mostrarEstat("Hi ha hagut un error en carregar el tipus del Pokémon.", "error");
     }
 }
 //# sourceMappingURL=main.js.map
